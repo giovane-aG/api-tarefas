@@ -56,6 +56,12 @@ class TodoService {
     await this.todoRepository.update(identificador, updateData)
   }
 
+  async delete (identificador: number) {
+
+    if (typeof(identificador) !== 'number') throw HttpResponses.badRequest(new InvalidParamError('identificador'))
+    await this.todoRepository.delete(identificador)
+  }
+
   validarPrazo (prazo: string) {
     const now = moment()
     const dataPrazo = moment(prazo)
