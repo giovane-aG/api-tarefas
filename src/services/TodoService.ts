@@ -2,7 +2,7 @@ import TodoRepository from '../repositories/TodoRepository'
 import { InvalidParamError, MissingParamError, InvalidDateError } from '../utils/errors'
 import TodoDTO from '../utils/Dtos/TodoDTO'
 import HttpResponses from '../utils/HttpResponses'
-import validarPrazo from '../utils/helpers/validarPrazo'
+import dateValidator from '../utils/helpers/dateValidator'
 import UpdateTodoDTO from '../utils/Dtos/UpdateTodoDTO'
 
 class TodoService {
@@ -31,7 +31,7 @@ class TodoService {
     if (completa && typeof (completa) !== 'boolean') throw HttpResponses.badRequest(new InvalidParamError('completa'))
     if (typeof (descricao) !== 'string') throw HttpResponses.badRequest(new InvalidParamError('descricao'))
 
-    const data = validarPrazo(prazo)
+    const data = dateValidator(prazo)
 
     const newTodo = await this.todoRepository.create({
       completa,
@@ -52,7 +52,7 @@ class TodoService {
     const updateData: UpdateTodoDTO = {}
 
     if (prazo) {
-      const data = validarPrazo(prazo)
+      const data = dateValidator(prazo)
       updateData.prazo = data
     }
 

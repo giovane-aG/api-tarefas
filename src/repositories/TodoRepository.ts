@@ -2,7 +2,6 @@ import knex from '../database/connection'
 import TodoDTO from 'utils/Dtos/TodoDTO'
 import UpdateTodoDTO from 'utils/Dtos/UpdateTodoDTO'
 
-
 class TodoRepository {
   async listAll () {
     return await knex<TodoDTO>('todos').select('*')
