@@ -9,6 +9,7 @@ const todoController = new TodoController()
 
 app.get('/tarefas', todoController.index)
 app.post('/tarefas', todoController.create)
+app.put('/tarefas/:identificador', todoController.update)
 
 app.listen(3000, () => {
   console.log('-----------------Server running on port 3000-----------------')
