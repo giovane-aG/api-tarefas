@@ -1,5 +1,7 @@
 import knex from '../database/connection'
 import TodoDTO from 'utils/Dtos/TodoDTO'
+import UpdateTodoDTO from 'utils/Dtos/UpdateTodoDTO'
+
 
 class TodoRepository {
   async listAll () {
@@ -11,10 +13,14 @@ class TodoRepository {
       .insert(todoDTO)
   }
 
-  async update (todoId: number, todo: TodoDTO) {
-    return await knex<TodoDTO>('todos')
-      .update(todo)
-      .where('descricao', todoId)
+  async update (todoId: number, todo: UpdateTodoDTO) {
+    await knex<TodoDTO>('todos')
+      .where('identificador', todoId)
+      .update({
+        completa: todo.completa,
+        descricao: todo.descricao,
+        prazo: todo.prazo
+      })
   }
 
   async delete (todoId: number) {
