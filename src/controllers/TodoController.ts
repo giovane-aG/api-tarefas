@@ -15,6 +15,18 @@ class TodoController {
     }
   }
 
+  async show (request: Request, response: Response) {
+    try {
+      const { identificador } = request.params
+
+      const todos = await todoService.show(parseInt(identificador))
+
+      return response.status(200).json(todos)
+    } catch (error: any) {
+      return response.status(500).json('Ocorreu um erro ao buscar a tarefa')
+    }
+  }
+
   async create (request: Request, response: Response) {
     try {
       const {
@@ -33,7 +45,6 @@ class TodoController {
 
       return response.status(resposta.statusCode).json(resposta.body)
     } catch (error: any) {
-
       return response.status(error.statusCode).json(error.body.message)
     }
   }
@@ -48,13 +59,13 @@ class TodoController {
         prazo
       } = request.body
 
-      await todoService.update(parseInt(identificador), {completa, descricao, prazo})
+      await todoService.update(parseInt(identificador), { completa, descricao, prazo })
 
-      return response.status(200).json({ 
+      return response.status(200).json({
         identificador,
         mensagem: 'Tarefa alterada com sucesso'
       })
-    } catch (error: any)  {
+    } catch (error: any) {
       return response.status(error.statusCode).json(error.body.message)
     }
   }
@@ -62,7 +73,7 @@ class TodoController {
   async delete (request: Request, response: Response) {
     try {
       const { identificador } = request.params
-      
+
       await todoService.delete(parseInt(identificador))
 
       return response.status(200).json({ mensagem: `Tarefa ${identificador} excluída com sucesso` })
@@ -70,7 +81,6 @@ class TodoController {
       return response.status(error.statusCode).json(error.body.message)
     }
   }
-
 }
 
 export default TodoController
