@@ -24,7 +24,7 @@ class TodoRepository {
   }
 
   async delete (todoId: number) {
-    return await knex<TodoDTO>('todos').delete().where('descricao', todoId)
+    return await knex<TodoDTO>('todos').delete().where('identificador', todoId)
   }
 }
 
