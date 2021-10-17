@@ -1,8 +1,9 @@
 import TodoRepository from '../repositories/TodoRepository'
-import { InvalidParamError, MissingParamError } from '../utils/errors'
+import { InvalidParamError, MissingParamError, InvalidDateError } from '../utils/errors'
 import TodoDTO from 'utils/Dtos/TodoDTO'
 import HttpResponses from '../utils/HttpResponses'
-import dayjs from 'dayjs'
+import moment from 'moment'
+import UpdateTodoDTO from 'utils/Dtos/UpdateTodoDTO'
 
 class TodoService {
   private readonly todoRepository: TodoRepository
@@ -21,7 +22,7 @@ class TodoService {
 
     if (completa && typeof (completa) !== 'boolean') throw HttpResponses.badRequest(new InvalidParamError('completa'))
     if (typeof (descricao) !== 'string') throw HttpResponses.badRequest(new InvalidParamError('descricao'))
-    if (!(prazo)) throw HttpResponses.badRequest(new InvalidParamError('prazo'))
+    if (typeof(prazo) !== 'string') throw HttpResponses.badRequest(new InvalidParamError('prazo'))
 
     const data = this.validarPrazo(prazo)
 
@@ -34,20 +35,37 @@ class TodoService {
     return { identificador: newTodo[0] }
   }
 
-  async update ({ completa, prazo, descricao }: TodoDTO) {
+  async update (identificador: number, { completa, prazo, descricao }: TodoDTO) {
+
+    if (!identificador) throw HttpResponses.badRequest(new MissingParamError('identificador'))
+
+    if (typeof(identificador) !== 'number' || isNaN(identificador)){
+      throw HttpResponses.badRequest(new InvalidParamError('identificador'))
+    }
     
+    let updateData: UpdateTodoDTO = {}
+
+    if (prazo) {
+      const data = this.validarPrazo(prazo)
+      updateData.prazo = data
+    }
+    
+    if (descricao) updateData.descricao = descricao
+    if (completa !== undefined) updateData.completa = completa
+
+    await this.todoRepository.update(identificador, updateData)
   }
 
   validarPrazo (prazo: string) {
-    const now = dayjs()
-    const dataPrazo = dayjs(prazo)
+    const now = moment()
+    const dataPrazo = moment(prazo)
 
     if (dataPrazo < now) {
       throw HttpResponses.badRequest(new InvalidParamError('prazo'))
     }
 
     const data = dataPrazo.format('YYYY-MM-DD HH:mm:ss')
-    if (data == 'Invalid Date') throw HttpResponses.badRequest(new InvalidParamError('prazo'))
+    if (data == 'Invalid date') throw HttpResponses.badRequest(new InvalidDateError())
 
     return data
   }
