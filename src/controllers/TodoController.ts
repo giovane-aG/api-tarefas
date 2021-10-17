@@ -11,7 +11,6 @@ class TodoController {
       const todos = await todoService.listAll()
       return response.status(200).json(todos)
     } catch (error: any) {
-      console.log('error :>> ', error)
       return response.status(500).json('Ocorreu um erro ao buscar as tarefas')
     }
   }
@@ -33,10 +32,33 @@ class TodoController {
       const resposta = HttpResponses.created(createdTodo)
 
       return response.status(resposta.statusCode).json(resposta.body)
-    } catch (error) {
-      return response.json(error)
+    } catch (error: any) {
+
+      return response.status(error.statusCode).json(error.body.message)
     }
   }
+
+  async update (request: Request, response: Response) {
+    try {
+      const { identificador } = request.params
+
+      const {
+        completa = false,
+        descricao,
+        prazo
+      } = request.body
+
+      await todoService.update(parseInt(identificador), {completa, descricao, prazo})
+
+      return response.status(200).json({ 
+        identificador,
+        message: 'Tarefa alterada com sucesso'
+      })
+    } catch (error: any)  {
+      return response.status(error.statusCode).json(error.body.message)
+    }
+  }
+
 }
 
 export default TodoController
