@@ -1,9 +1,9 @@
 import TodoRepository from '../repositories/TodoRepository'
 import { InvalidParamError, MissingParamError, InvalidDateError } from '../utils/errors'
-import TodoDTO from 'utils/Dtos/TodoDTO'
+import TodoDTO from '../utils/Dtos/TodoDTO'
 import HttpResponses from '../utils/HttpResponses'
-import moment from 'moment'
-import UpdateTodoDTO from 'utils/Dtos/UpdateTodoDTO'
+import validarPrazo from '../utils/helpers/validarPrazo'
+import UpdateTodoDTO from '../utils/Dtos/UpdateTodoDTO'
 
 class TodoService {
   private readonly todoRepository: TodoRepository
@@ -16,15 +16,22 @@ class TodoService {
     return await this.todoRepository.listAll()
   }
 
+  async show (identificador: number) {
+    if (!identificador) throw HttpResponses.badRequest(new MissingParamError('identificador'))
+
+    if (typeof (identificador) !== 'number' || isNaN(identificador)) {
+      throw HttpResponses.badRequest(new InvalidParamError('identificador'))
+    }
+  }
+
   async create ({ completa, prazo, descricao }: TodoDTO) {
     if (!descricao) throw HttpResponses.badRequest(new MissingParamError('descricao'))
     if (!prazo) throw HttpResponses.badRequest(new MissingParamError('prazo'))
 
     if (completa && typeof (completa) !== 'boolean') throw HttpResponses.badRequest(new InvalidParamError('completa'))
     if (typeof (descricao) !== 'string') throw HttpResponses.badRequest(new InvalidParamError('descricao'))
-    if (typeof(prazo) !== 'string') throw HttpResponses.badRequest(new InvalidParamError('prazo'))
 
-    const data = this.validarPrazo(prazo)
+    const data = validarPrazo(prazo)
 
     const newTodo = await this.todoRepository.create({
       completa,
@@ -36,20 +43,19 @@ class TodoService {
   }
 
   async update (identificador: number, { completa, prazo, descricao }: TodoDTO) {
-
     if (!identificador) throw HttpResponses.badRequest(new MissingParamError('identificador'))
 
-    if (typeof(identificador) !== 'number' || isNaN(identificador)){
+    if (typeof (identificador) !== 'number' || isNaN(identificador)) {
       throw HttpResponses.badRequest(new InvalidParamError('identificador'))
     }
-    
-    let updateData: UpdateTodoDTO = {}
+
+    const updateData: UpdateTodoDTO = {}
 
     if (prazo) {
-      const data = this.validarPrazo(prazo)
+      const data = validarPrazo(prazo)
       updateData.prazo = data
     }
-    
+
     if (descricao) updateData.descricao = descricao
     if (completa !== undefined) updateData.completa = completa
 
@@ -57,23 +63,8 @@ class TodoService {
   }
 
   async delete (identificador: number) {
-
-    if (typeof(identificador) !== 'number') throw HttpResponses.badRequest(new InvalidParamError('identificador'))
+    if (typeof (identificador) !== 'number') throw HttpResponses.badRequest(new InvalidParamError('identificador'))
     await this.todoRepository.delete(identificador)
-  }
-
-  validarPrazo (prazo: string) {
-    const now = moment()
-    const dataPrazo = moment(prazo)
-
-    if (dataPrazo < now) {
-      throw HttpResponses.badRequest(new InvalidParamError('prazo'))
-    }
-
-    const data = dataPrazo.format('YYYY-MM-DD HH:mm:ss')
-    if (data == 'Invalid date') throw HttpResponses.badRequest(new InvalidDateError())
-
-    return data
   }
 }
 
