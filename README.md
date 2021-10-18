@@ -4,6 +4,7 @@ api-tarefas-giovane-aG created by GitHub Classroom
 ## Tecnologias utilizadas 💻
 
 - [Node.js](https://nodejs.org/)
+- [Express](https://expressjs.com/pt-br/)
 - [Typescript](https://www.typescriptlang.org)
 - [Knex](https://knexjs.org/)
 - [MySQL](https://www.mysql.com/)
@@ -22,6 +23,7 @@ api-tarefas-giovane-aG created by GitHub Classroom
 - Utilize um cliente http como o [Postman](https://www.postman.com/) ou [Insomnia](https://insomnia.rest/download) para realizar as chamadas à api
 
 ## Funcionalidades da API
+- Url base: http://localhost:3000
 - Get /tarefas: retornar uma lista com todas as tarefas.
 - Get /tarefas/{identificador}: retornar a tarefa correspondente ao identificador.
 - Post /tarefas: incluir uma tarefa; os dados da tarefa devem ser passados no corpo da requisição HTTP.
