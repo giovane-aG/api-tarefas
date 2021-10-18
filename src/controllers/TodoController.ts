@@ -19,9 +19,9 @@ class TodoController {
     try {
       const { identificador } = request.params
 
-      const todos = await todoService.show(parseInt(identificador))
+      const todo = await todoService.show(parseInt(identificador))
 
-      return response.status(200).json(todos)
+      return response.status(200).json(todo)
     } catch (error: any) {
       return response.status(500).json('Ocorreu um erro ao buscar a tarefa')
     }

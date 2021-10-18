@@ -7,6 +7,11 @@ class TodoRepository {
     return await knex<TodoDTO>('todos').select('*')
   }
 
+  async find (todoId: number) {
+    const todo =  await knex<TodoDTO>('todos').select('*').where('identificador', todoId)
+    return todo[0] || {}
+  }
+
   async create (todoDTO: TodoDTO) {
     return await knex<TodoDTO>('todos')
       .insert(todoDTO)
