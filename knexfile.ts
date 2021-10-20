@@ -9,7 +9,10 @@ module.exports = {
       port: 3306,
       user: 'root',
       password: '',
-      // database: 'todos_database'
+      database: 'todos_database',
+    },
+    migrations: {
+      directory: 'src/database/migrations'
     }
   },
 
