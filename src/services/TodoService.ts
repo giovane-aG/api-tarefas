@@ -22,6 +22,8 @@ class TodoService {
     if (typeof (identificador) !== 'number' || isNaN(identificador)) {
       throw HttpResponses.badRequest(new InvalidParamError('identificador'))
     }
+
+    return await this.todoRepository.find(identificador)
   }
 
   async create ({ completa, prazo, descricao }: TodoDTO) {
