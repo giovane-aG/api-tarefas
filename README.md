@@ -1,5 +1,4 @@
-# api-tarefas-giovane-aG
-api-tarefas-giovane-aG created by GitHub Classroom
+# Api de Tarefas
 
 ## Tecnologias utilizadas 💻
 
