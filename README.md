@@ -11,7 +11,7 @@ api-tarefas-giovane-aG created by GitHub Classroom
 ## Instalação 🔧
 ### Instalando o MySQL
 - É necessário ter o NodeJS instalado.
-- É necessário ter o mysql instalado rodando na porta 3306. Para facilitar o processo de instalação é possível utilizar o [Xampp].(https://www.apachefriends.org/download.html).
+- É necessário ter o mysql instalado rodando na porta 3306. Para facilitar o processo de instalação é possível utilizar o [Xampp](https://www.apachefriends.org/download.html).
 - Após instalado o Xampp, ligar o MySQL clicando no "Start".
 
 ### Clonando projeto
